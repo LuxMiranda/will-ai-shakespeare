@@ -3,7 +3,6 @@ from curses.ascii import isdigit
 import nltk
 from nltk.corpus import cmudict
 
-
 d = cmudict.dict()
 
 """
@@ -37,6 +36,16 @@ def checkRhyme( word1, word2 ):
     if word2.find ( word1 ) == len ( word2 ) - len ( word1 ): 
         return False
     return word1 in rhyme ( word2, 1 )
+
+"""
+Return the rank of a CMUdict word part.
+Returns -1 if the word part does not have a rank
+"""
+def toRank(syl):
+    if syl[-1].isdigit():
+        return int(syl[-1])
+    return -1
+    
 
 """
 Check to see if a list of words follows iambic pentameter
