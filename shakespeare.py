@@ -1,4 +1,5 @@
-print("Initializing...")
+verbose = False
+if verbose: print("Initializing...")
 import curses
 from curses.ascii import isdigit
 import json
@@ -13,7 +14,6 @@ import pronouncing
 import multiprocessing
 import time
 
-verbose = True
 
 d = cmudict.dict()
 PUNCTS = [',','.','?',u"'",':',';','--','!',"''"]
@@ -134,6 +134,8 @@ def isIP(stanza):
     last = getLast(stanza)
     rhymes = [x for x in pronouncing.rhymes(last) if wordToSylRanks(x) == wordToSylRanks(last)]
     if len([rhyme for rhyme in rhymes if rhyme not in bannedList]) == 0:
+        return False
+    if stanza[0][0] == u"'":
         return False
     return True
 
@@ -312,5 +314,5 @@ def runGenerator():
 
 if verbose: print("Generating sonnet...\n")
 
-while True:
-    runGenerator()
+#while True:
+runGenerator()
