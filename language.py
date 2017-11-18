@@ -8,11 +8,12 @@ import random
 from random import randint
 import math
 import approxSyls
+import pronouncing
 
 verbose = False
 
 d = cmudict.dict()
-
+PUNCTS = [',','.','?',u"'",':',';','--','!',"''"]
 tagDict = {}
 """
 Load and parse sonnets from a file and return the structure
@@ -102,7 +103,7 @@ def stanzaToSylRanks(stanza):
     return ranks
 
 """
-Check to see if a list of words follows iambic pentameter
+Check to see if a list of words follows iambic pentameter and has a rhymable last word
 """
 def isIP(stanza):
     ranks = stanzaToSylRanks(stanza)
@@ -110,6 +111,8 @@ def isIP(stanza):
         return False
     for r in [ranks[i] for i in [1,3,5,7,9]]:
         if r <= 0:
+            return False
+    if len(pronouncing.rhymes(getLast(stanza))) == 0:
             return False
     return True
         
@@ -130,12 +133,36 @@ def replaceWordTags(tags):
             newLine.append("NOTAG")
     return newLine
 
-def getIPLine(tags):
+def chooseRhyme(word, rhyme):
+    rhymes = pronouncing.rhymes(rhyme)
+    syls = len(wordToSylRanks(word))
+    for r in rhymes:
+        if len(wordToSylRanks(r)) == syls:
+            return r
+
+    return rhymes[randint(0,len(rhymes) - 1)]
+
+def makeRhyme(line, rhyme):
+    if rhyme == "":
+        return line
+    else:
+        chosenRhyme = chooseRhyme(getLast(line),rhyme)
+        if line[-1] in PUNCTS:
+            line[-2] = chosenRhyme
+        else:
+            line[-1] = chosenRhyme
+        return line
+
+"""
+Generate a line in the meter
+"""
+def getIPLine(tags, rhyme):
     newLine = replaceWordTags(tags)
-    noPunc = [x for x in newLine if x not in [',','.','?',u"'",':',';','--','!']]
+    noPunc = [x for x in newLine if x not in PUNCTS]
     while not isIP(noPunc):
         newLine = replaceWordTags(tags)
-        noPunc = [x for x in newLine if x not in [',','.','?',u"'",':',';','--','!']]
+        noPunc = [x for x in newLine if x not in PUNCTS]
+    newLine = makeRhyme(newLine, rhyme)
     return newLine
 
 """
@@ -174,6 +201,12 @@ def makeRandomSonnetStructure():
             
     return sonnetStruct
 
+def getLast(line):
+    last = line[-1]
+    if last in PUNCTS:
+        last = line[-2]
+    return last
+
 
 def createProtoSonnet():
     global tagDict
@@ -181,8 +214,38 @@ def createProtoSonnet():
         buildTagDict(sonnets)
     lines = makeRandomSonnetStructure()
     protoSonnet = []
-    for line in lines:
-        protoSonnet.append(replaceWordTags(line))
+
+    
+    line0  = getIPLine(lines[0],  "")             #a
+    line1  = getIPLine(lines[1],  "")             #b
+    line2  = getIPLine(lines[2],  getLast(line0)) #a
+    line3  = getIPLine(lines[3],  getLast(line1)) #b
+    line4  = getIPLine(lines[4],  "")             #c
+    line5  = getIPLine(lines[5],  "")             #d
+    line6  = getIPLine(lines[6],  getLast(line4)) #c
+    line7  = getIPLine(lines[7],  getLast(line5)) #d
+    line8  = getIPLine(lines[8],  "")             #e
+    line9  = getIPLine(lines[9],  "")             #f
+    line10 = getIPLine(lines[10], getLast(line8)) #e
+    line11 = getIPLine(lines[11], getLast(line9)) #f
+    line12 = getIPLine(lines[12], "")             #g
+    line13 = getIPLine(lines[13], getLast(line12))#g
+
+    protoSonnet.append(line0)
+    protoSonnet.append(line1)
+    protoSonnet.append(line2)
+    protoSonnet.append(line3)
+    protoSonnet.append(line4)
+    protoSonnet.append(line5)
+    protoSonnet.append(line6)
+    protoSonnet.append(line7)
+    protoSonnet.append(line8)
+    protoSonnet.append(line9)
+    protoSonnet.append(line10)
+    protoSonnet.append(line11)
+    protoSonnet.append(line12)
+    protoSonnet.append(line13)
+
     if verbose: print lines
     if verbose: print protoSonnet
     return protoSonnet
@@ -195,7 +258,7 @@ def wordListToSentence(wordList):
     sentence = ""
     for i in range(0,len(wordList) - 1):
         sentence = sentence + wordList[i]
-        if wordList[i+1] not in [',','.','?',u"'",':',';','--','!']:
+        if wordList[i+1] not in PUNCTS:
             sentence = sentence + " "
     sentence = sentence + wordList[-1]
     return sentence
@@ -206,6 +269,7 @@ def protoSonnetToSonnet(protoSonnet):
         sonnet.append(wordListToSentence(line))
     if verbose: print sonnet
     return sonnet
+
 
 protoSonnet = protoSonnetToSonnet(createProtoSonnet())
 
