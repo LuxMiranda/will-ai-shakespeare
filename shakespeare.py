@@ -33,7 +33,8 @@ bannedList = ["a",
               u'"',
               u'(paren',
               u'th',
-              u"'"
+              u"'",
+              u'car'
              ]
 tagDict = {}
 """
@@ -317,4 +318,5 @@ def runGenerator():
  
 print("Generating sonnet...")
 print("")
-runGenerator()
+while True:
+    runGenerator()
