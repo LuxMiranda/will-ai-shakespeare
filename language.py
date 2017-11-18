@@ -268,12 +268,14 @@ def protoSonnetToSonnet(protoSonnet):
     if verbose: print sonnet
     return sonnet
 
+def beautify(sonnet):
+    pretty = ""
+    for line in sonnet:
+        pretty += line.capitalize() + '\n'
+
+    return pretty
 
 def generateSonnet():
-    protoSonnet = protoSonnetToSonnet(createProtoSonnet())
-    string = ""
-    for line in protoSonnet:
-        string += ''.join(line) + '\n'
-    return string
+    return beautify(protoSonnetToSonnet(createProtoSonnet()))
 
 print(generateSonnet())
