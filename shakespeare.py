@@ -34,7 +34,8 @@ bannedList = ["a",
               u'(paren',
               u'th',
               u"'",
-              u'car'
+              u'car',
+              u'"quote'
              ]
 tagDict = {}
 """
@@ -97,8 +98,6 @@ buildTagDict(sonnets)
 if verbose: print "finished building"
 if verbose: print tagDict
 
-sonnets = load_sonnets("./sonnets.json")
-
 """
 Return the rank of a CMUdict word part.
 Returns -1 if the word part does not have a rank
@@ -136,7 +135,9 @@ def isIP(stanza):
     for r in [ranks[i] for i in [1,3,5,7,9]]:
         if r <= 0:
             return False
-    if len([rhyme for rhyme in pronouncing.rhymes(getLast(stanza)) if rhyme not in bannedList]) == 0:
+    last = getLast(stanza)
+    rhymes = [x for x in pronouncing.rhymes(last) if wordToSylRanks(x) == wordToSylRanks(last)]
+    if len([rhyme for rhyme in rhymes if rhyme not in bannedList]) == 0:
             return False
     return True
 
@@ -162,9 +163,9 @@ def chooseRhyme(word, rhyme):
     #Hacky fix for library bug. Wait, what am I saying? This whole project is hacky.
     while rhymes == []:
         rhymes = pronouncing.rhymes(rhyme)
-    syls = len(wordToSylRanks(word))
+    syls = wordToSylRanks(word)
     for r in rhymes:
-        if len(wordToSylRanks(r)) == syls:
+        if wordToSylRanks(r) == syls:
             return r
 
     return rhymes[randint(0,len(rhymes) - 1)]
@@ -237,7 +238,6 @@ def createProtoSonnet():
         buildTagDict(sonnets)
     lines = makeRandomSonnetStructure()
     protoSonnet = []
-
 
     line0  = getIPLine(lines[0],  "")             #a
     line1  = getIPLine(lines[1],  "")             #b
