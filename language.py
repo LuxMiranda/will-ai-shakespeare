@@ -13,7 +13,7 @@ import pronouncing
 import multiprocessing
 import time
 
-verbose = False
+verbose = True
 
 d = cmudict.dict()
 PUNCTS = [',','.','?',u"'",':',';','--','!',"''"]
@@ -55,9 +55,7 @@ def load_sonnets(file_name):
 
         return map(add_tags_to_sonnet, sonnets)
 
-if verbose: print "loading sonnets"
-
-print("Analyzing Shakespeare's works...")
+if verbose: print("Analyzing Shakespeare's works...")
 sonnets = load_sonnets("./sonnets.json")
 
 
@@ -91,10 +89,7 @@ def addTagsToDict(tagList):
                 tagDict[tag] = [word]
     return tagDict
 
-if verbose: print "building tagdict"
 buildTagDict(sonnets)
-if verbose: print "finished building"
-if verbose: print tagDict
 
 sonnets = load_sonnets("./sonnets.json")
 
@@ -139,7 +134,6 @@ def isIP(stanza):
             return False
     return True
 
-
 """
 Takes a list of tags and searches the tag dictionary for appropriate replacements. Returns a new array of the same length containing the replaced sentence
 """
@@ -150,7 +144,6 @@ def replaceWordTags(tags):
     for tag in tags:
         if tag in tagDict:
             replacement = random.choice(tagDict[tag])
-            if verbose: print "replacing " + tag + " with " + replacement
             newLine.append(replacement)
         else:
             newLine.append("NOTAG")
@@ -229,14 +222,12 @@ def getLast(line):
         last = line[-2]
     return last
 
-
 def createProtoSonnet():
     global tagDict
     if tagDict == {} or tagDict is None:
         buildTagDict(sonnets)
     lines = makeRandomSonnetStructure()
     protoSonnet = []
-
 
     line0  = getIPLine(lines[0],  "")             #a
     line1  = getIPLine(lines[1],  "")             #b
@@ -268,10 +259,7 @@ def createProtoSonnet():
     protoSonnet.append(line12)
     protoSonnet.append(line13)
 
-    if verbose: print lines
-    if verbose: print protoSonnet
     return protoSonnet
-
 
 """
 Takes a list of words and punctuation and returns a nicely formatted English sentence
@@ -287,6 +275,7 @@ def wordListToSentence(wordList):
 
 def protoSonnetToSonnet(protoSonnet):
     for outer in protoSonnet:
+        outer[0] = outer[0].capitalize()
         for i in range(len(outer)):
             if outer[i] == u"i":
                 outer[i] = u"I"
@@ -296,8 +285,7 @@ def protoSonnetToSonnet(protoSonnet):
 
     pretty = ""
     for line in sonnet:
-        pretty += line.capitalize() + '\n'
-
+        pretty += line + '\n'
 
     return pretty
 
@@ -309,13 +297,12 @@ def runGenerator():
     p.start()
     p.join(5)
     if p.is_alive():
-        print("Trying a different sonnet structure...")
-        print("")
+        if verbose: print("Trying a different sonnet structure...\n")
         p.terminate()
         p.join()
         runGenerator()
         return
  
-print("Generating sonnet...")
-print("")
+if verbose: print("Generating sonnet...\n")
+
 runGenerator()
