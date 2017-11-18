@@ -13,6 +13,7 @@ import approxSyls
 import pronouncing
 import multiprocessing
 import time
+import cPickle
 
 
 d = cmudict.dict()
@@ -39,6 +40,7 @@ bannedList = ["a",
               u"'i"
              ]
 tagDict = {}
+sonnets = "rekt"
 """
 Load and parse sonnets from a file and return the structure
 @param {string} file_name The file location (complete path)
@@ -92,7 +94,10 @@ def addTagsToDict(tagList):
                 tagDict[tag] = [word]
     return tagDict
 
-buildTagDict(sonnets)
+if verbose: print "building tagdict"
+#buildTagDict(sonnets)
+if verbose: print "finished building"
+if verbose: print tagDict
 
 """
 Return the rank of a CMUdict word part.
@@ -288,18 +293,35 @@ def protoSonnetToSonnet(protoSonnet):
         for i in range(len(outer)):
             if outer[i] == u"i":
                 outer[i] = u"I"
-    sonnet = []
+
+    sonneto = []
     for line in protoSonnet:
-        sonnet.append(wordListToSentence(line))
+        sonneto.append(wordListToSentence(line))
 
     pretty = ""
-    for line in sonnet:
+    for line in sonneto:
         pretty += line + '\n'
 
     return pretty
 
+
 def generateSonnet():
     print protoSonnetToSonnet(createProtoSonnet())
+
+
+def createPickleTagDict():
+    global tagDict, sonnets
+    
+    print("Analyzing Shakespeare's works...")
+    sonnets = load_sonnets("./sonnets.json")
+    buildTagDict(sonnets)
+    with open('pickleTagDict.pck','wb') as handle:
+        cPickle.dump(tagDict,handle, protocol=cPickle.HIGHEST_PROTOCOL)
+
+def readPickleTagDict():
+    global tagDict
+    with open('pickleTagDict.pck','rb') as handle:
+        tagDict = cPickle.load(handle)
 
 def runGenerator():
     p = multiprocessing.Process(target=generateSonnet)
@@ -312,6 +334,11 @@ def runGenerator():
         runGenerator()
         return
 
+if verbose: print("reading pickle dict")
+readPickleTagDict()
+#print tagDict
+#print sonnets
+ 
 if verbose: print("Generating sonnet...\n")
 
 #while True:
