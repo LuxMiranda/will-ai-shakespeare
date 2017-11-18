@@ -37,7 +37,10 @@ bannedList = ["a",
               u"'",
               u'car',
               u'"quote',
-              u"'i"
+              u"'i",
+              "'i",
+              u'videotex',
+              u"'"
              ]
 tagDict = {}
 sonnets = "rekt"
@@ -293,6 +296,11 @@ def protoSonnetToSonnet(protoSonnet):
         for i in range(len(outer)):
             if outer[i] == u"i":
                 outer[i] = u"I"
+
+    for line in protoSonnet:
+        for word in line:
+            if word == u"''tis":
+                word = u"'tis"
 
     sonneto = []
     for line in protoSonnet:
