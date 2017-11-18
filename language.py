@@ -7,12 +7,11 @@ from nltk.tokenize import word_tokenize
 import random
 from random import randint
 import math
-
+import approxSyls
 
 d = cmudict.dict()
-d["forsooth"] = [u'FOR0',u'SOOTH2']
-tagDict = {}
 
+tagDict = {}
 """
 Load and parse sonnets from a file and return the structure
 @param {string} file_name The file location (complete path)
@@ -36,6 +35,9 @@ print "loading sonnets"
 sonnets = load_sonnets("./sonnets.json")
 
 
+"""
+Builds the tag dictionary from multiple tag lists/lines given by load_sonnets
+"""
 def buildTagDict(sonnets):
     #gets a sonnet line
     for sonnet in sonnets:
@@ -43,7 +45,10 @@ def buildTagDict(sonnets):
             addTagsToDict(taglist)
     
         
-#assuming one line and its tag list is passed as arrays
+"""
+Iterate through a single-line list of word/tag pairs and add them
+to the tag dictionary
+"""
 def addTagsToDict(tagList):
     global tagDict
     for word,tag in tagList:
@@ -79,7 +84,10 @@ def toRank(part):
 Convert a word into a list of syllable stress ranks
 """
 def wordToSylRanks(word):
-    return [toRank(part) for part in (d[word.lower()][0]) if toRank(part) != -1]
+    try:
+        return [toRank(part) for part in (d[word.lower()][0]) if toRank(part) != -1]
+    except:
+        return [1] * approxSyls.apSyls(word)
 
 """
 Convert a list of words into a monolithic list of syllable stress ranks
@@ -103,9 +111,9 @@ def isIP(stanza):
     return True
         
 
-
-
-
+"""
+Takes a list of tags and searches the tag dictionary for appropriate replacements. Returns a new array of the same length containing the replaced sentence
+"""
 def replaceWordTags(tags):
     #Assuming each word in words is an nltk tag as a string. ie. ['UU','WC','CC']
     global tagDict
@@ -117,6 +125,14 @@ def replaceWordTags(tags):
             newLine.append(replacement)
         else:
             newLine.append("NOTAG")
+    return newLine
+
+def getIPLine(tags):
+    newLine = replaceWordTags(tags)
+    noPunc = [x for x in newLine if x not in [',','.','?',u"'",':',';','--','!']]
+    while not isIP(noPunc):
+        newLine = replaceWordTags(tags)
+        noPunc = [x for x in newLine if x not in [',','.','?',u"'",':',';','--','!']]
     return newLine
 
 """
@@ -176,7 +192,7 @@ def wordListToSentence(wordList):
     sentence = ""
     for i in range(0,len(wordList) - 1):
         sentence = sentence + wordList[i]
-        if wordList[i+1] not in [',','.','?','\'',':',';']:
+        if wordList[i+1] not in [',','.','?',u"'",':',';','--','!']:
             sentence = sentence + " "
     sentence = sentence + wordList[-1]
     return sentence
@@ -187,8 +203,6 @@ def protoSonnetToSonnet(protoSonnet):
         sonnet.append(wordListToSentence(line))
     print sonnet
 
-
-
-
 protoSonnetToSonnet(createProtoSonnet())
+
 
