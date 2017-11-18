@@ -41,18 +41,35 @@ def checkRhyme( word1, word2 ):
 Return the rank of a CMUdict word part.
 Returns -1 if the word part does not have a rank
 """
-def toRank(syl):
-    if syl[-1].isdigit():
-        return int(syl[-1])
+def toRank(part):
+    if part[-1].isdigit():
+        return int(part[-1])
     return -1
     
+"""
+Convert a word into a list of syllable stress ranks
+"""
+def wordToSylRanks(word):
+    return [toRank(part) for part in (d[word.lower()][0]) if toRank(part) != -1]
+
+"""
+Convert a list of words into a monolithic list of syllable stress ranks
+"""
+def stanzaToSylRanks(stanza):
+    ranks = []
+    for word in stanza:
+        ranks = ranks + wordToSylRanks(word)
+    return ranks
 
 """
 Check to see if a list of words follows iambic pentameter
 """
 def isIP(stanza):
-    sylCount = 0;
-    for word in stanza:
-        sylCount = sylCount + numSyls(word)[0]
-    return (sylCount == 10)
+    ranks = stanzaToSylRanks(stanza)
+    if len(ranks) != 10:
+        return False
+    for r in [ranks[i] for i in [1,3,5,7,9]]:
+        if r <= 0:
+            return False
+    return True
         
