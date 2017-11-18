@@ -298,7 +298,7 @@ def beautify(sonnet):
     return pretty
 
 def generateSonnet():
-    return beautify(protoSonnetToSonnet(createProtoSonnet()))
+    print beautify(protoSonnetToSonnet(createProtoSonnet()))
 
 def runGenerator():
     p = multiprocessing.Process(target=generateSonnet)
@@ -308,8 +308,7 @@ def runGenerator():
         print("Trying a different sonnet structure...")
         p.terminate()
         p.join()
-        print generateSonnet()
+        runGenerator()
         return
  
-while True:
-    runGenerator()
+runGenerator()
