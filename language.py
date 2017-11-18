@@ -12,6 +12,7 @@ import approxSyls
 import pronouncing
 import multiprocessing
 import time
+import pickle
 
 verbose = False
 
@@ -314,6 +315,14 @@ def runGenerator():
         p.join()
         runGenerator()
         return
+
+def createPickleTagDict():
+    with open('pickleTagDict.pck','wb') as handle:
+        pickle.dump(tagDict,handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+def readPickleTagDict():
+    with open('pickleTagDict.pck','wb') as handle:
+        tagDict = pickle.load(handle)
  
 print("Generating sonnet...")
 print("")
