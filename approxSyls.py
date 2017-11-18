@@ -1,7 +1,12 @@
 import re
 
+zeroSyls = [u"'d", u"'s", u"'ll"]
+
 def apSyls(word):
     word = word.lower()
+
+    if word in zeroSyls:
+        return 0
  
     # exception_add are words that need extra syllables
     # exception_del are words that need less syllables

@@ -35,7 +35,8 @@ bannedList = ["a",
               u'th',
               u"'",
               u'car',
-              u'"quote'
+              u'"quote',
+              u"'i"
              ]
 tagDict = {}
 """
@@ -220,7 +221,11 @@ def makeRandomSonnetStructure():
     # For the first 13 lines, pick a correspondingly-indexed line from a random sonnet
     for i in range(0,14):
         randSonnet = getRandSonnetTags()
-        line = randSonnet[i]
+        line = []
+        try:
+            line = randSonnet[i]
+        except:
+            pass
         sonnetStruct.append([x[1] for x in line])
 
     return sonnetStruct
