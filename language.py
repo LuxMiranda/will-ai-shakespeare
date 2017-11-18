@@ -9,7 +9,6 @@ from random import randint
 import math
 
 d = cmudict.dict()
-sonnets = load_sonnets("./sonnets.json")
 d["forsooth"] = [u'FOR0',u'SOOTH2']
 tagDict = {}
 
@@ -32,6 +31,8 @@ def load_sonnets(file_name):
 
         return map(add_tags_to_sonnet, sonnets)
 
+
+sonnets = load_sonnets("./sonnets.json")
 
 """
 Return the rank of a CMUdict word part.
@@ -134,4 +135,17 @@ def makeRandomSonnetStructure():
     sonnetStruct.append([x[1] for x in lastSonnet[-1]])
             
     return sonnetStruct
+
+"""
+Takes a list of words and punctuation and returns a nicely formatted English sentence
+"""
+def wordListToSentence(wordList):
+    sentence = ""
+    for i in range(0,len(wordList) - 1):
+        sentence = sentence + wordList[i]
+        if wordList[i+1] not in [',','.','?','\'',':',';']:
+            sentence = sentence + " "
+    sentence = sentence + wordList[-1]
+    return sentence
+
 
