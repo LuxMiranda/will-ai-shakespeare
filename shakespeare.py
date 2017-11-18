@@ -1,5 +1,6 @@
 print("Initializing...")
-import curses from curses.ascii import isdigit
+import curses 
+from curses.ascii import isdigit
 import json
 import nltk
 from nltk.corpus import cmudict
@@ -331,9 +332,9 @@ def runGenerator():
         runGenerator()
         return
 
-print("reading pickle dict")
+if verbose: print("reading pickle dict")
 readPickleTagDict()
-print tagDict
+#print tagDict
 #print sonnets
  
 if verbose: print("Generating sonnet...\n")
