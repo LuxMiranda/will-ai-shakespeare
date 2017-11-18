@@ -274,5 +274,6 @@ def generateSonnet():
     string = ""
     for line in protoSonnet:
         string += ''.join(line) + '\n'
+    return string
 
 print(generateSonnet())
