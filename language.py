@@ -1,3 +1,4 @@
+print("Initializing...")
 import curses
 from curses.ascii import isdigit
 import json
@@ -56,6 +57,7 @@ def load_sonnets(file_name):
 
 if verbose: print "loading sonnets"
 
+print("Analyzing Shakespeare's works...")
 sonnets = load_sonnets("./sonnets.json")
 
 
@@ -295,6 +297,7 @@ def beautify(sonnet):
     for line in sonnet:
         pretty += line.capitalize() + '\n'
 
+
     return pretty
 
 def generateSonnet():
@@ -306,9 +309,12 @@ def runGenerator():
     p.join(5)
     if p.is_alive():
         print("Trying a different sonnet structure...")
+        print("")
         p.terminate()
         p.join()
         runGenerator()
         return
  
+print("Generating sonnet...")
+print("")
 runGenerator()
