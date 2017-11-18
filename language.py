@@ -9,6 +9,8 @@ from random import randint
 import math
 import approxSyls
 
+verbose = False
+
 d = cmudict.dict()
 
 tagDict = {}
@@ -31,7 +33,8 @@ def load_sonnets(file_name):
 
         return map(add_tags_to_sonnet, sonnets)
 
-print "loading sonnets"
+if verbose: print "loading sonnets"
+
 sonnets = load_sonnets("./sonnets.json")
 
 
@@ -64,10 +67,10 @@ def addTagsToDict(tagList):
             tagDict[tag] = [word]
     return tagDict
 
-print "building tagdict"
+if verbose: print "building tagdict"
 buildTagDict(sonnets)
-print "finished building"
-print tagDict
+if verbose: print "finished building"
+if verbose: print tagDict
 
 sonnets = load_sonnets("./sonnets.json")
 
@@ -121,7 +124,7 @@ def replaceWordTags(tags):
     for tag in tags:
         if tag in tagDict:
             replacement = random.choice(tagDict[tag])
-            print "replacing " + tag + " with " + replacement
+            if verbose: print "replacing " + tag + " with " + replacement
             newLine.append(replacement)
         else:
             newLine.append("NOTAG")
@@ -180,8 +183,8 @@ def createProtoSonnet():
     protoSonnet = []
     for line in lines:
         protoSonnet.append(replaceWordTags(line))
-    print lines
-    print protoSonnet
+    if verbose: print lines
+    if verbose: print protoSonnet
     return protoSonnet
 
 
@@ -201,8 +204,13 @@ def protoSonnetToSonnet(protoSonnet):
     sonnet = []
     for line in protoSonnet:
         sonnet.append(wordListToSentence(line))
-    print sonnet
+    if verbose: print sonnet
+    return sonnet
 
-protoSonnetToSonnet(createProtoSonnet())
+protoSonnet = protoSonnetToSonnet(createProtoSonnet())
 
+string = ""
+for line in  protoSonnet:
+    string += ''.join(line) + '\n'
 
+print string
