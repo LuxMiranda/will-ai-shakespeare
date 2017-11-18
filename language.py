@@ -5,9 +5,11 @@ import nltk
 from nltk.corpus import cmudict
 from nltk.tokenize import word_tokenize
 import random
+from random import randint
 import math
 
 d = cmudict.dict()
+sonnets = load_sonnets("./sonnets.json")
 d["forsooth"] = [u'FOR0',u'SOOTH2']
 tagDict = {}
 
@@ -30,39 +32,6 @@ def load_sonnets(file_name):
 
         return map(add_tags_to_sonnet, sonnets)
 
-'''
-"""
-Count the number of sylables in a word.
-Returns a list of integers with each integer the syllable
-count for a certain pronunciation.
-"""
-def numSyls(word):   
-    return [len(list(y for y in x if y[-1].isdigit())) for x in d[word.lower()]]
-
-"""
-Generate a list of rhymes for a given word.
-"Level" is how good the rhymes should be. 
-"""
-def rhymeList(inp, level):
-    entries = cmudict.entries()
-    syllables = [(word, syl) for word, syl in entries if word == inp]
-    rhymes = []
-    for (word, syllable) in syllables:
-        rhymes += [word for word, pron in entries if pron[-level:] == syllable[-level:]]
-    return set(rhymes)
-
-"""
-Check to see if two words rhyme
-"""
-def checkRhyme( word1, word2 ):
-    # first, we don't want to report 'glue' and 'unglue' as rhyming words
-    # those kind of rhymes are LAME
-    if word1.find ( word2 ) == len(word1) - len ( word2 ):
-        return False
-    if word2.find ( word1 ) == len ( word2 ) - len ( word1 ): 
-        return False
-    return word1 in rhyme ( word2, 1 )
-'''
 
 """
 Return the rank of a CMUdict word part.
@@ -130,17 +99,39 @@ def replaceWordTags(tags):
         newLine.append(replacement)
     return newLine
 
-
-
-
-
-sonnets = load_sonnets("sonnets.json")
-buildTagDict(sonnets)
-print tagDict
-
-
 """
 Convert a list of words to a list of tags
 """
 def toTags(line):
     return [x[1] for x in nltk.pos_tag(line)]
+
+"""
+Grab a random sonnet's tag set from the .json
+"""
+def getRandSonnetTags():
+    return sonnets[randint(0, len(sonnets) - 1)]["tags"]
+
+"""
+Grab a random line from a sonnet
+"""
+def getRandSonnetLine(sonnet):
+    return sonnet[randint(0, len(sonnet) - 1)]
+
+"""
+Generate a random sonnet structure of word tags
+"""
+def makeRandomSonnetStructure():
+    sonnetStruct = []
+
+    # For the first 13 lines, pick a random line from a random sonnet
+    for i in range(0,13):
+        randSonnet = getRandSonnetTags()
+        randLine = getRandSonnetLine(randSonnet)
+        sonnetStruct.append([x[1] for x in randLine])
+    
+    # For the last line, choose the last line from a random sonnet
+    lastSonnet = getRandSonnetTags()
+    sonnetStruct.append([x[1] for x in lastSonnet[-1]])
+            
+    return sonnetStruct
+
