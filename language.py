@@ -9,6 +9,8 @@ from random import randint
 import math
 import approxSyls
 import pronouncing
+import multiprocessing
+import time
 
 verbose = False
 
@@ -137,9 +139,8 @@ def replaceWordTags(tags):
 
 def chooseRhyme(word, rhyme):
     rhymes = []
-    try:
-       rhymes = pronouncing.rhymes(rhyme)
-    except:
+    #Hacky fix for library bug. Wait, what am I saying? This whole project is hacky.
+    while rhymes == []:
         rhymes = pronouncing.rhymes(rhyme)
     syls = len(wordToSylRanks(word))
     for r in rhymes:
@@ -278,7 +279,18 @@ def generateSonnet():
     string = ""
     for line in protoSonnet:
         string += ''.join(line) + '\n'
-    return string
+    print(string)
 
-#while True:
-print(generateSonnet())
+def runGenerator():
+    p = multiprocessing.Process(target=generateSonnet)
+    p.start()
+    p.join(5)
+    if p.is_alive():
+        print("Trying a different sonnet structure...")
+        p.terminate()
+        p.join()
+        generateSonnet()
+        return
+ 
+while True:
+    runGenerator()
