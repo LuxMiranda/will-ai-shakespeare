@@ -1,8 +1,13 @@
 import curses
 from curses.ascii import isdigit
+import json
 import nltk
 from nltk.corpus import cmudict
 from nltk.tokenize import word_tokenize
+
+sonnets = None
+with open("./sonnets.json", "r") as sonnetFile:
+    sonnets = json.load(sonnetFile)
 
 d = cmudict.dict()
 d["forsooth"] = [u'FOR0',u'SOOTH2']
