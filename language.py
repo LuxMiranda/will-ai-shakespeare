@@ -101,14 +101,25 @@ def isIP(stanza):
     return True
         
 
+def buildTagDict(sonnets):
+    #gets a sonnet line
+    for sonnet in sonnets:
+        for taglist in sonnet["tags"]:
+            addTagsToDict(taglist)
+        
 #assuming one line and its tag list is passed as arrays
-def buildTagDict(tagList):
-    for word, tag in tagList:
-        if word in tagDict:
-            if tag not in tagDict[word]:
-            tagDict[word] = tagDict[word].append(tag)
+def addTagsToDict(tagList):
+    for word,tag in tagList:
+        word = word.lower()
+        if tagList == {}:
+            tagList[tag] = word
+        elif tag in tagDict:
+            if tagDict[tag] is None:
+                tagDict[tag] = [word]
+            elif word not in tagDict[tag]:
+                tagDict[tag].append(word)
         else:
-            tagDict[word] = [tag]
+            tagDict[tag] = [word]
 
 
 def replaceWordTags(tags):
@@ -123,8 +134,9 @@ def replaceWordTags(tags):
 
 
 
-
-
+sonnets = load_sonnets("sonnets.json")
+buildTagDict(sonnets)
+print tagDict
 
 
 """
