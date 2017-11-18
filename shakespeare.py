@@ -1,6 +1,5 @@
 print("Initializing...")
-import curses
-from curses.ascii import isdigit
+import curses from curses.ascii import isdigit
 import json
 import nltk
 from nltk.corpus import cmudict
@@ -14,7 +13,7 @@ import multiprocessing
 import time
 import cPickle
 
-verbose = False
+verbose = True
 
 d = cmudict.dict()
 PUNCTS = [',','.','?',u"'",':',';','--','!',"''"]
@@ -34,7 +33,10 @@ bannedList = ["a",
               u'"',
               u'(paren',
               u'th',
-              u"'"
+              u"'",
+              u'car',
+              u'"quote',
+              u"'i"
              ]
 tagDict = {}
 sonnets = "rekt"
@@ -57,9 +59,7 @@ def load_sonnets(file_name):
 
         return map(add_tags_to_sonnet, sonnets)
 
-if verbose: print "loading sonnets"
-
-print("Analyzing Shakespeare's works...")
+if verbose: print("Analyzing Shakespeare's works...")
 sonnets = load_sonnets("./sonnets.json")
 
 
@@ -135,10 +135,11 @@ def isIP(stanza):
     for r in [ranks[i] for i in [1,3,5,7,9]]:
         if r <= 0:
             return False
-    if len([rhyme for rhyme in pronouncing.rhymes(getLast(stanza)) if rhyme not in bannedList]) == 0:
-            return False
+    last = getLast(stanza)
+    rhymes = [x for x in pronouncing.rhymes(last) if wordToSylRanks(x) == wordToSylRanks(last)]
+    if len([rhyme for rhyme in rhymes if rhyme not in bannedList]) == 0:
+        return False
     return True
-
 
 """
 Takes a list of tags and searches the tag dictionary for appropriate replacements. Returns a new array of the same length containing the replaced sentence
@@ -150,7 +151,6 @@ def replaceWordTags(tags):
     for tag in tags:
         if tag in tagDict:
             replacement = random.choice(tagDict[tag])
-            if verbose: print "replacing " + tag + " with " + replacement
             newLine.append(replacement)
         else:
             newLine.append("NOTAG")
@@ -161,9 +161,9 @@ def chooseRhyme(word, rhyme):
     #Hacky fix for library bug. Wait, what am I saying? This whole project is hacky.
     while rhymes == []:
         rhymes = pronouncing.rhymes(rhyme)
-    syls = len(wordToSylRanks(word))
+    syls = wordToSylRanks(word)
     for r in rhymes:
-        if len(wordToSylRanks(r)) == syls:
+        if wordToSylRanks(r) == syls:
             return r
 
     return rhymes[randint(0,len(rhymes) - 1)]
@@ -218,7 +218,11 @@ def makeRandomSonnetStructure():
     # For the first 13 lines, pick a correspondingly-indexed line from a random sonnet
     for i in range(0,14):
         randSonnet = getRandSonnetTags()
-        line = randSonnet[i]
+        line = []
+        try:
+            line = randSonnet[i]
+        except:
+            pass
         sonnetStruct.append([x[1] for x in line])
 
     return sonnetStruct
@@ -229,14 +233,12 @@ def getLast(line):
         last = line[-2]
     return last
 
-
 def createProtoSonnet():
     global tagDict
     if tagDict == {} or tagDict is None:
         buildTagDict(sonnets)
     lines = makeRandomSonnetStructure()
     protoSonnet = []
-
 
     line0  = getIPLine(lines[0],  "")             #a
     line1  = getIPLine(lines[1],  "")             #b
@@ -268,10 +270,7 @@ def createProtoSonnet():
     protoSonnet.append(line12)
     protoSonnet.append(line13)
 
-    if verbose: print lines
-    if verbose: print protoSonnet
     return protoSonnet
-
 
 """
 Takes a list of words and punctuation and returns a nicely formatted English sentence
@@ -286,22 +285,25 @@ def wordListToSentence(wordList):
     return sentence
 
 def protoSonnetToSonnet(protoSonnet):
+    for outer in protoSonnet:
+        outer[0] = outer[0].capitalize()
+        for i in range(len(outer)):
+            if outer[i] == u"i":
+                outer[i] = u"I"
+
     sonneto = []
     for line in protoSonnet:
         sonneto.append(wordListToSentence(line))
-    if verbose: print sonneto
-    return sonneto
 
-def beautify(sonnet):
     pretty = ""
-    for line in sonnet:
-        pretty += line.capitalize() + '\n'
-
+    for line in sonneto:
+        pretty += line + '\n'
 
     return pretty
 
+
 def generateSonnet():
-    print beautify(protoSonnetToSonnet(createProtoSonnet()))
+    print protoSonnetToSonnet(createProtoSonnet())
 
 
 def createPickleTagDict():
@@ -323,8 +325,7 @@ def runGenerator():
     p.start()
     p.join(5)
     if p.is_alive():
-        print("Trying a different sonnet structure...")
-        print("")
+        if verbose: print("Trying a different sonnet structure...\n")
         p.terminate()
         p.join()
         runGenerator()
@@ -332,9 +333,10 @@ def runGenerator():
 
 print("reading pickle dict")
 readPickleTagDict()
-#print tagDict
+print tagDict
 #print sonnets
  
-print("Generating sonnet...")
-print("")
-runGenerator()
+if verbose: print("Generating sonnet...\n")
+
+while True:
+    runGenerator()
