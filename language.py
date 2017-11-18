@@ -2,9 +2,11 @@ import curses
 from curses.ascii import isdigit
 import nltk
 from nltk.corpus import cmudict
+from nltk.tokenize import word_tokenize
 
 d = cmudict.dict()
-
+d["forsooth"] = [u'FOR0',u'SOOTH2']
+'''
 """
 Count the number of sylables in a word.
 Returns a list of integers with each integer the syllable
@@ -36,6 +38,7 @@ def checkRhyme( word1, word2 ):
     if word2.find ( word1 ) == len ( word2 ) - len ( word1 ): 
         return False
     return word1 in rhyme ( word2, 1 )
+'''
 
 """
 Return the rank of a CMUdict word part.
@@ -72,4 +75,3 @@ def isIP(stanza):
         if r <= 0:
             return False
     return True
-        
