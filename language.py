@@ -14,6 +14,7 @@ verbose = False
 
 d = cmudict.dict()
 PUNCTS = [',','.','?',u"'",':',';','--','!',"''"]
+bannedList = ["a","'t", "t", "au", "an", "niggard"]
 tagDict = {}
 """
 Load and parse sonnets from a file and return the structure
@@ -57,15 +58,16 @@ def addTagsToDict(tagList):
     global tagDict
     for word,tag in tagList:
         word = word.lower()
-        if tagDict == {} or tagDict is None:
-            tagDict[tag] = [word]
-        elif tag in tagDict:
-            if tag not in tagDict:
+        if word not in bannedList:
+            if tagDict == {} or tagDict is None:
                 tagDict[tag] = [word]
-            elif word not in tagDict[tag]:
-                tagDict[tag].append(word)
-        else:
-            tagDict[tag] = [word]
+            elif tag in tagDict:
+                if tag not in tagDict:
+                    tagDict[tag] = [word]
+                elif word not in tagDict[tag]:
+                    tagDict[tag].append(word)
+            else:
+                tagDict[tag] = [word]
     return tagDict
 
 if verbose: print "building tagdict"
@@ -112,7 +114,7 @@ def isIP(stanza):
     for r in [ranks[i] for i in [1,3,5,7,9]]:
         if r <= 0:
             return False
-    if len(pronouncing.rhymes(getLast(stanza))) == 0:
+    if len([rhyme for rhyme in pronouncing.rhymes(getLast(stanza)) if rhyme not in bannedList]) == 0:
             return False
     return True
         
@@ -189,16 +191,12 @@ Generate a random sonnet structure of word tags
 def makeRandomSonnetStructure():
     sonnetStruct = []
 
-    # For the first 13 lines, pick a random line from a random sonnet
-    for i in range(0,13):
+    # For the first 13 lines, pick a correspondingly-indexed line from a random sonnet
+    for i in range(0,14):
         randSonnet = getRandSonnetTags()
-        randLine = getRandSonnetLine(randSonnet)
-        sonnetStruct.append([x[1] for x in randLine])
+        line = randSonnet[i]
+        sonnetStruct.append([x[1] for x in line])
     
-    # For the last line, choose the last line from a random sonnet
-    lastSonnet = getRandSonnetTags()
-    sonnetStruct.append([x[1] for x in lastSonnet[-1]])
-            
     return sonnetStruct
 
 def getLast(line):
@@ -271,10 +269,10 @@ def protoSonnetToSonnet(protoSonnet):
     return sonnet
 
 
-protoSonnet = protoSonnetToSonnet(createProtoSonnet())
+def generateSonnet():
+    protoSonnet = protoSonnetToSonnet(createProtoSonnet())
+    string = ""
+    for line in protoSonnet:
+        string += ''.join(line) + '\n'
 
-string = ""
-for line in  protoSonnet:
-    string += ''.join(line) + '\n'
-
-print string
+print(generateSonnet())
