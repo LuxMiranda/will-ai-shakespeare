@@ -299,8 +299,17 @@ def protoSonnetToSonnet(protoSonnet):
 
     for line in protoSonnet:
         for word in line:
+
             if word == u"''tis":
                 word = u"'tis"
+
+            if word == u"'i":
+                word = u'in'
+
+        for i in range(0, len(line)):
+            
+            if line[i-1] in [u'.', u'!', u'?']:
+                line[i] = line[i].title()
 
     sonneto = []
     for line in protoSonnet:
