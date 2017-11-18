@@ -2,8 +2,11 @@ import curses
 from curses.ascii import isdigit
 import nltk
 from nltk.corpus import cmudict
+import random
+import math
 
 d = cmudict.dict()
+tagDict = {}
 
 """
 Count the number of sylables in a word.
@@ -73,3 +76,30 @@ def isIP(stanza):
             return False
     return True
         
+
+#assuming one line and its tag list is passed as arrays
+def buildTagDict(tagList):
+    for word, tag in tagList:
+        if word in tagDict:
+            if tag not in tagDict[word]:
+            tagDict[word] = tagDict[word].append(tag)
+        else:
+            tagDict[word] = [tag]
+
+
+def replaceWordTags(tags):
+    #Assuming each word in words is an nltk tag as a string. ie. ['UU','WC','CC']
+    newLine = []
+    for tag in tags:
+        replacement = random.choice(tagDict[tag])
+        newLine.append(replacement)
+    return newLine
+
+
+
+
+
+
+
+
+
