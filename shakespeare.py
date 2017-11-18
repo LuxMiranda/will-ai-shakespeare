@@ -31,6 +31,8 @@ bannedList = ["a",
               u'[',
               u']',
               u'c',
+              u"c",
+              "c",
               u'"',
               u'(paren',
               u'th',
@@ -298,18 +300,17 @@ def protoSonnetToSonnet(protoSonnet):
                 outer[i] = u"I"
 
     for line in protoSonnet:
-        for word in line:
-
-            if word == u"''tis":
-                word = u"'tis"
-
-            if word == u"'i":
-                word = u'in'
-
         for i in range(0, len(line)):
+
+            if line[i] == u"''tis":
+                line[i] = u"'tis"
+
+            if line[i] == u"'i":
+                line[i] = u'in'
             
             if line[i-1] in [u'.', u'!', u'?']:
                 line[i] = line[i].title()
+
 
     sonneto = []
     for line in protoSonnet:
