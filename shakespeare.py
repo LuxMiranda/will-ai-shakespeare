@@ -287,13 +287,14 @@ def wordListToSentence(wordList):
     return sentence
 
 def protoSonnetToSonnet(protoSonnet):
+    for outer in protoSonnet:
+        for i in range(len(outer)):
+            if outer[i] == u"i":
+                outer[i] = u"I"
     sonnet = []
     for line in protoSonnet:
         sonnet.append(wordListToSentence(line))
-    if verbose: print sonnet
-    return sonnet
 
-def beautify(sonnet):
     pretty = ""
     for line in sonnet:
         pretty += line.capitalize() + '\n'
@@ -302,7 +303,7 @@ def beautify(sonnet):
     return pretty
 
 def generateSonnet():
-    print beautify(protoSonnetToSonnet(createProtoSonnet()))
+    print protoSonnetToSonnet(createProtoSonnet())
 
 def runGenerator():
     p = multiprocessing.Process(target=generateSonnet)
