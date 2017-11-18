@@ -136,7 +136,11 @@ def replaceWordTags(tags):
     return newLine
 
 def chooseRhyme(word, rhyme):
-    rhymes = pronouncing.rhymes(rhyme)
+    rhymes = []
+    try:
+       rhymes = pronouncing.rhymes(rhyme)
+    except:
+        rhymes = pronouncing.rhymes(rhyme)
     syls = len(wordToSylRanks(word))
     for r in rhymes:
         if len(wordToSylRanks(r)) == syls:
@@ -276,4 +280,5 @@ def generateSonnet():
         string += ''.join(line) + '\n'
     return string
 
+#while True:
 print(generateSonnet())
