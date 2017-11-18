@@ -3,3 +3,10 @@ shakespeare.mit.edu has all of Shakespeare's plays available as monolithic .html
 https://github.com/schollz/poetry-generator for reference
 
 This is really cool for making our program's brain: http://www.nltk.org/book/ch05.html
+
+
+Cool stretch goals:
+  - A neural net. Obviously.
+  - Config file to mix up the meter
+  - Print sonnets over a picture of Shakespeare
+  - Make Alexa read them to us
