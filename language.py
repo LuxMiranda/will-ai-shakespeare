@@ -64,6 +64,8 @@ buildTagDict(sonnets)
 print "finished building"
 print tagDict
 
+sonnets = load_sonnets("./sonnets.json")
+
 """
 Return the rank of a CMUdict word part.
 Returns -1 if the word part does not have a rank
@@ -153,6 +155,7 @@ def makeRandomSonnetStructure():
             
     return sonnetStruct
 
+
 def createProtoSonnet():
     global tagDict
     if tagDict == {} or tagDict is None: 
@@ -169,3 +172,14 @@ def createProtoSonnet():
 
 
 createProtoSonnet()
+"""
+Takes a list of words and punctuation and returns a nicely formatted English sentence
+"""
+def wordListToSentence(wordList):
+    sentence = ""
+    for i in range(0,len(wordList) - 1):
+        sentence = sentence + wordList[i]
+        if wordList[i+1] not in [',','.','?','\'',':',';']:
+            sentence = sentence + " "
+    sentence = sentence + wordList[-1]
+    return sentence
