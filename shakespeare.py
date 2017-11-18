@@ -18,25 +18,26 @@ verbose = True
 d = cmudict.dict()
 PUNCTS = [',','.','?',u"'",':',';','--','!',"''"]
 bannedList = ["a",
-        "'t", 
-        "t",
-        "au",
-        "an",
-        "niggard",
-        u'ai',
-        u'ais',
-        "ais",
-        u"ais",
-        u'[',
-        u']',
-        u'c',
-        u'"',
-        u'(paren',
-        u'th',
-        u"'",
-        u'car',
-        u'"quote'
-        ]
+              "'t", 
+              "t",
+              "au",
+              "an",
+              "niggard",
+              u'ai',
+              u'ais',
+              "ais",
+              u"ais",
+              u'[',
+              u']',
+              u'c',
+              u'"',
+              u'(paren',
+              u'th',
+              u"'",
+              u'car',
+              u'"quote',
+              u"'i"
+             ]
 tagDict = {}
 """
 Load and parse sonnets from a file and return the structure
@@ -213,7 +214,11 @@ def makeRandomSonnetStructure():
     # For the first 13 lines, pick a correspondingly-indexed line from a random sonnet
     for i in range(0,14):
         randSonnet = getRandSonnetTags()
-        line = randSonnet[i]
+        line = []
+        try:
+            line = randSonnet[i]
+        except:
+            pass
         sonnetStruct.append([x[1] for x in line])
 
     return sonnetStruct
