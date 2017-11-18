@@ -1,13 +1,36 @@
 import curses
 from curses.ascii import isdigit
+import json
 import nltk
 from nltk.corpus import cmudict
+from nltk.tokenize import word_tokenize
 import random
 import math
 
 d = cmudict.dict()
+d["forsooth"] = [u'FOR0',u'SOOTH2']
 tagDict = {}
 
+"""
+Load and parse sonnets from a file and return the structure
+@param {string} file_name The file location (complete path)
+@return {dictionary[]}
+"""
+def load_sonnets(file_name):
+    sonnets = None
+    with open(file_name, "r") as sonnetFile:
+        sonnets = json.load(sonnetFile)
+
+        def get_tags_from_sonnet(sonnet):
+            return map(lambda line: nltk.pos_tag(word_tokenize(line)), sonnet)
+
+        def add_tags_to_sonnet(sonnet_info):
+            sonnet_info["tags"] = get_tags_from_sonnet(sonnet_info["sonnet"])
+            return sonnet_info
+
+        return map(add_tags_to_sonnet, sonnets)
+
+'''
 """
 Count the number of sylables in a word.
 Returns a list of integers with each integer the syllable
@@ -39,6 +62,7 @@ def checkRhyme( word1, word2 ):
     if word2.find ( word1 ) == len ( word2 ) - len ( word1 ): 
         return False
     return word1 in rhyme ( word2, 1 )
+'''
 
 """
 Return the rank of a CMUdict word part.
@@ -103,3 +127,8 @@ def replaceWordTags(tags):
 
 
 
+"""
+Convert a list of words to a list of tags
+"""
+def toTags(line):
+    return [x[1] for x in nltk.pos_tag(line)]
