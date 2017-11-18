@@ -169,9 +169,6 @@ def createProtoSonnet():
     return protoSonnet
 
 
-
-
-createProtoSonnet()
 """
 Takes a list of words and punctuation and returns a nicely formatted English sentence
 """
@@ -183,3 +180,15 @@ def wordListToSentence(wordList):
             sentence = sentence + " "
     sentence = sentence + wordList[-1]
     return sentence
+
+def protoSonnetToSonnet(protoSonnet):
+    sonnet = []
+    for line in protoSonnet:
+        sonnet.append(wordListToSentence(line))
+    print sonnet
+
+
+
+
+protoSonnetToSonnet(createProtoSonnet())
+
