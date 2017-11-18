@@ -12,7 +12,7 @@ import approxSyls
 import pronouncing
 import multiprocessing
 import time
-import pickle
+import cPickle
 
 verbose = False
 
@@ -37,6 +37,7 @@ bannedList = ["a",
               u"'"
              ]
 tagDict = {}
+sonnets = "rekt"
 """
 Load and parse sonnets from a file and return the structure
 @param {string} file_name The file location (complete path)
@@ -93,11 +94,9 @@ def addTagsToDict(tagList):
     return tagDict
 
 if verbose: print "building tagdict"
-buildTagDict(sonnets)
+#buildTagDict(sonnets)
 if verbose: print "finished building"
 if verbose: print tagDict
-
-sonnets = load_sonnets("./sonnets.json")
 
 """
 Return the rank of a CMUdict word part.
@@ -287,11 +286,11 @@ def wordListToSentence(wordList):
     return sentence
 
 def protoSonnetToSonnet(protoSonnet):
-    sonnet = []
+    sonneto = []
     for line in protoSonnet:
-        sonnet.append(wordListToSentence(line))
-    if verbose: print sonnet
-    return sonnet
+        sonneto.append(wordListToSentence(line))
+    if verbose: print sonneto
+    return sonneto
 
 def beautify(sonnet):
     pretty = ""
@@ -303,6 +302,21 @@ def beautify(sonnet):
 
 def generateSonnet():
     print beautify(protoSonnetToSonnet(createProtoSonnet()))
+
+
+def createPickleTagDict():
+    global tagDict, sonnets
+    
+    print("Analyzing Shakespeare's works...")
+    sonnets = load_sonnets("./sonnets.json")
+    buildTagDict(sonnets)
+    with open('pickleTagDict.pck','wb') as handle:
+        cPickle.dump(tagDict,handle, protocol=cPickle.HIGHEST_PROTOCOL)
+
+def readPickleTagDict():
+    global tagDict
+    with open('pickleTagDict.pck','rb') as handle:
+        tagDict = cPickle.load(handle)
 
 def runGenerator():
     p = multiprocessing.Process(target=generateSonnet)
@@ -316,13 +330,10 @@ def runGenerator():
         runGenerator()
         return
 
-def createPickleTagDict():
-    with open('pickleTagDict.pck','wb') as handle:
-        pickle.dump(tagDict,handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-def readPickleTagDict():
-    with open('pickleTagDict.pck','wb') as handle:
-        tagDict = pickle.load(handle)
+print("reading pickle dict")
+readPickleTagDict()
+#print tagDict
+#print sonnets
  
 print("Generating sonnet...")
 print("")
