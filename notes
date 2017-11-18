@@ -6,7 +6,14 @@ This is really cool for making our program's brain: http://www.nltk.org/book/ch0
 
 
 Cool stretch goals:
-  - A neural net. Obviously.
   - Config file to mix up the meter
-  - Print sonnets over a picture of Shakespeare
-  - Make Alexa read them to us
+
+Completed stretch goals:
+  - Print sonnets over a picture of Shakespeare!
+
+
+TODO:
+
+Fix weird punctuation things
+Do a once-over afterwards to fix capitalization
+
