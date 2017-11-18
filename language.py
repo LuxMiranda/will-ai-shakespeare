@@ -8,8 +8,8 @@ import random
 from random import randint
 import math
 
+
 d = cmudict.dict()
-sonnets = load_sonnets("./sonnets.json")
 d["forsooth"] = [u'FOR0',u'SOOTH2']
 tagDict = {}
 
@@ -32,6 +32,37 @@ def load_sonnets(file_name):
 
         return map(add_tags_to_sonnet, sonnets)
 
+print "loading sonnets"
+sonnets = load_sonnets("./sonnets.json")
+
+
+def buildTagDict(sonnets):
+    #gets a sonnet line
+    for sonnet in sonnets:
+        for taglist in sonnet["tags"]:
+            addTagsToDict(taglist)
+    
+        
+#assuming one line and its tag list is passed as arrays
+def addTagsToDict(tagList):
+    global tagDict
+    for word,tag in tagList:
+        word = word.lower()
+        if tagDict == {} or tagDict is None:
+            tagDict[tag] = [word]
+        elif tag in tagDict:
+            if tag not in tagDict:
+                tagDict[tag] = [word]
+            elif word not in tagDict[tag]:
+                tagDict[tag].append(word)
+        else:
+            tagDict[tag] = [word]
+    return tagDict
+
+print "building tagdict"
+buildTagDict(sonnets)
+print "finished building"
+print tagDict
 
 """
 Return the rank of a CMUdict word part.
@@ -70,33 +101,20 @@ def isIP(stanza):
     return True
         
 
-def buildTagDict(sonnets):
-    #gets a sonnet line
-    for sonnet in sonnets:
-        for taglist in sonnet["tags"]:
-            addTagsToDict(taglist)
-        
-#assuming one line and its tag list is passed as arrays
-def addTagsToDict(tagList):
-    for word,tag in tagList:
-        word = word.lower()
-        if tagList == {}:
-            tagList[tag] = word
-        elif tag in tagDict:
-            if tagDict[tag] is None:
-                tagDict[tag] = [word]
-            elif word not in tagDict[tag]:
-                tagDict[tag].append(word)
-        else:
-            tagDict[tag] = [word]
+
 
 
 def replaceWordTags(tags):
     #Assuming each word in words is an nltk tag as a string. ie. ['UU','WC','CC']
+    global tagDict
     newLine = []
     for tag in tags:
-        replacement = random.choice(tagDict[tag])
-        newLine.append(replacement)
+        if tag in tagDict:
+            replacement = random.choice(tagDict[tag])
+            print "replacing " + tag + " with " + replacement
+            newLine.append(replacement)
+        else:
+            newLine.append("NOTAG")
     return newLine
 
 """
@@ -135,3 +153,19 @@ def makeRandomSonnetStructure():
             
     return sonnetStruct
 
+def createProtoSonnet():
+    global tagDict
+    if tagDict == {} or tagDict is None: 
+        buildTagDict(sonnets)
+    lines = makeRandomSonnetStructure()
+    protoSonnet = []
+    for line in lines:
+        protoSonnet.append(replaceWordTags(line))
+    print lines
+    print protoSonnet
+    return protoSonnet
+
+
+
+
+createProtoSonnet()
