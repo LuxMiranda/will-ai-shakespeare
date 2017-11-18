@@ -1,3 +1,4 @@
+print("Initializing...")
 import curses
 from curses.ascii import isdigit
 import json
@@ -16,7 +17,24 @@ verbose = False
 
 d = cmudict.dict()
 PUNCTS = [',','.','?',u"'",':',';','--','!',"''"]
-bannedList = ["a","'t", "t", "au", "an", "niggard"]
+bannedList = ["a",
+              "'t", 
+              "t",
+              "au",
+              "an",
+              "niggard",
+              u'ai',
+              u'ais',
+              "ais",
+              u"ais",
+              u'[',
+              u']',
+              u'c',
+              u'"',
+              u'(paren',
+              u'th',
+              u"'"
+             ]
 tagDict = {}
 """
 Load and parse sonnets from a file and return the structure
@@ -39,6 +57,7 @@ def load_sonnets(file_name):
 
 if verbose: print "loading sonnets"
 
+print("Analyzing Shakespeare's works...")
 sonnets = load_sonnets("./sonnets.json")
 
 
@@ -269,8 +288,8 @@ def wordListToSentence(wordList):
 def protoSonnetToSonnet(protoSonnet):
     for outer in protoSonnet:
         for i in range(len(outer)):
-            if outer[i] == "i":
-                outer[i] = "I"
+            if outer[i] == u"i":
+                outer[i] = u"I"
     sonnet = []
     for line in protoSonnet:
         sonnet.append(wordListToSentence(line))
@@ -279,10 +298,11 @@ def protoSonnetToSonnet(protoSonnet):
     for line in sonnet:
         pretty += line.capitalize() + '\n'
 
+
     return pretty
 
 def generateSonnet():
-    return protoSonnetToSonnet(createProtoSonnet())
+    print protoSonnetToSonnet(createProtoSonnet())
 
 def runGenerator():
     p = multiprocessing.Process(target=generateSonnet)
@@ -290,10 +310,12 @@ def runGenerator():
     p.join(5)
     if p.is_alive():
         print("Trying a different sonnet structure...")
+        print("")
         p.terminate()
         p.join()
-        print generateSonnet()
+        runGenerator()
         return
  
-#while True:
-#    runGenerator()
+print("Generating sonnet...")
+print("")
+runGenerator()

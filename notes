@@ -5,9 +5,6 @@ https://github.com/schollz/poetry-generator for reference
 This is really cool for making our program's brain: http://www.nltk.org/book/ch05.html
 
 
-Cool stretch goals:
-  - Config file to mix up the meter
-
 Completed stretch goals:
   - Print sonnets over a picture of Shakespeare!
 
