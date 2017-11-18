@@ -75,3 +75,9 @@ def isIP(stanza):
         if r <= 0:
             return False
     return True
+
+"""
+Convert a list of words to a list of tags
+"""
+def toTags(line):
+    return [x[1] for x in nltk.pos_tag(line)]
