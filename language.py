@@ -48,8 +48,8 @@ def buildTagDict(sonnets):
     for sonnet in sonnets:
         for taglist in sonnet["tags"]:
             addTagsToDict(taglist)
-    
-        
+
+
 """
 Iterate through a single-line list of word/tag pairs and add them
 to the tag dictionary
@@ -85,7 +85,7 @@ def toRank(part):
     if part[-1].isdigit():
         return int(part[-1])
     return -1
-    
+
 """
 Convert a word into a list of syllable stress ranks
 """
@@ -117,7 +117,7 @@ def isIP(stanza):
     if len([rhyme for rhyme in pronouncing.rhymes(getLast(stanza)) if rhyme not in bannedList]) == 0:
             return False
     return True
-        
+
 
 """
 Takes a list of tags and searches the tag dictionary for appropriate replacements. Returns a new array of the same length containing the replaced sentence
@@ -200,7 +200,7 @@ def makeRandomSonnetStructure():
         randSonnet = getRandSonnetTags()
         line = randSonnet[i]
         sonnetStruct.append([x[1] for x in line])
-    
+
     return sonnetStruct
 
 def getLast(line):
@@ -212,12 +212,12 @@ def getLast(line):
 
 def createProtoSonnet():
     global tagDict
-    if tagDict == {} or tagDict is None: 
+    if tagDict == {} or tagDict is None:
         buildTagDict(sonnets)
     lines = makeRandomSonnetStructure()
     protoSonnet = []
 
-    
+
     line0  = getIPLine(lines[0],  "")             #a
     line1  = getIPLine(lines[1],  "")             #b
     line2  = getIPLine(lines[2],  getLast(line0)) #a
