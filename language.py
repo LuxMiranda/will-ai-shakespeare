@@ -16,7 +16,24 @@ verbose = False
 
 d = cmudict.dict()
 PUNCTS = [',','.','?',u"'",':',';','--','!',"''"]
-bannedList = ["a","'t", "t", "au", "an", "niggard"]
+bannedList = ["a",
+              "'t", 
+              "t",
+              "au",
+              "an",
+              "niggard",
+              u'ai',
+              u'ais',
+              "ais",
+              u"ais",
+              u'[',
+              u']',
+              u'c',
+              u'"',
+              u'(paren',
+              u'th',
+              u"'"
+             ]
 tagDict = {}
 """
 Load and parse sonnets from a file and return the structure
