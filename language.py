@@ -15,9 +15,6 @@ def load_sonnets(file_name):
     with open(file_name, "r") as sonnetFile:
         sonnets = json.load(sonnetFile)
 
-        words = word_tokenize("Hast thou, the master-mistress of my passion;")
-        print nltk.pos_tag(words)
-
         def get_tags_from_sonnet(sonnet):
             return map(lambda line: nltk.pos_tag(word_tokenize(line)), sonnet)
 
