@@ -5,9 +5,27 @@ import nltk
 from nltk.corpus import cmudict
 from nltk.tokenize import word_tokenize
 
-sonnets = None
-with open("./sonnets.json", "r") as sonnetFile:
-    sonnets = json.load(sonnetFile)
+"""
+Load and parse sonnets from a file and return the structure
+@param {string} file_name The file location (complete path)
+@return {dictionary[]}
+"""
+def load_sonnets(file_name):
+    sonnets = None
+    with open(file_name, "r") as sonnetFile:
+        sonnets = json.load(sonnetFile)
+
+        words = word_tokenize("Hast thou, the master-mistress of my passion;")
+        print nltk.pos_tag(words)
+
+        def get_tags_from_sonnet(sonnet):
+            return map(lambda line: nltk.pos_tag(word_tokenize(line)), sonnet)
+
+        def add_tags_to_sonnet(sonnet_info):
+            sonnet_info["tags"] = get_tags_from_sonnet(sonnet_info["sonnet"])
+            return sonnet_info
+
+        return map(add_tags_to_sonnet, sonnets)
 
 d = cmudict.dict()
 d["forsooth"] = [u'FOR0',u'SOOTH2']
