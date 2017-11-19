@@ -1,5 +1,6 @@
-print("Initializing...")
-import curses 
+verbose = False
+if verbose: print("Initializing...")
+import curses
 from curses.ascii import isdigit
 import json
 import nltk
@@ -14,31 +15,35 @@ import multiprocessing
 import time
 import cPickle
 
-verbose = True
 
 d = cmudict.dict()
 PUNCTS = [',','.','?',u"'",':',';','--','!',"''"]
 bannedList = ["a",
-        "'t", 
-        "t",
-        "au",
-        "an",
-        "niggard",
-        u'ai',
-        u'ais',
-        "ais",
-        u"ais",
-        u'[',
-        u']',
-        u'c',
-        u'"',
-        u'(paren',
-        u'th',
-        u"'",
-        u'car',
-        u'"quote',
-        u"'i"
-        ]
+              "'t", 
+              "t",
+              "au",
+              "an",
+              "niggard",
+              u'ai',
+              u'ais',
+              "ais",
+              u"ais",
+              u'[',
+              u']',
+              u'c',
+              u"c",
+              "c",
+              u'"',
+              u'(paren',
+              u'th',
+              u"'",
+              u'car',
+              u'"quote',
+              u"'i",
+              "'i",
+              u'videotex',
+              u"'"
+             ]
 tagDict = {}
 sonnets = "rekt"
 """
@@ -139,6 +144,8 @@ def isIP(stanza):
     last = getLast(stanza)
     rhymes = [x for x in pronouncing.rhymes(last) if wordToSylRanks(x) == wordToSylRanks(last)]
     if len([rhyme for rhyme in rhymes if rhyme not in bannedList]) == 0:
+        return False
+    if stanza[0][0] == u"'":
         return False
     return True
 
@@ -292,6 +299,19 @@ def protoSonnetToSonnet(protoSonnet):
             if outer[i] == u"i":
                 outer[i] = u"I"
 
+    for line in protoSonnet:
+        for i in range(0, len(line)):
+
+            if line[i] == u"''tis":
+                line[i] = u"'tis"
+
+            if line[i] == u"'i":
+                line[i] = u'in'
+            
+            if line[i-1] in [u'.', u'!', u'?']:
+                line[i] = line[i].title()
+
+
     sonneto = []
     for line in protoSonnet:
         sonneto.append(wordListToSentence(line))
@@ -353,5 +373,5 @@ readPickleTagDict()
 
 if verbose: print("Generating sonnet...\n")
 
-while True:
-    runGenerator()
+#while True:
+runGenerator()
