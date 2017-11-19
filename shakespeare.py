@@ -19,26 +19,26 @@ verbose = True
 d = cmudict.dict()
 PUNCTS = [',','.','?',u"'",':',';','--','!',"''"]
 bannedList = ["a",
-              "'t", 
-              "t",
-              "au",
-              "an",
-              "niggard",
-              u'ai',
-              u'ais',
-              "ais",
-              u"ais",
-              u'[',
-              u']',
-              u'c',
-              u'"',
-              u'(paren',
-              u'th',
-              u"'",
-              u'car',
-              u'"quote',
-              u"'i"
-             ]
+        "'t", 
+        "t",
+        "au",
+        "an",
+        "niggard",
+        u'ai',
+        u'ais',
+        "ais",
+        u"ais",
+        u'[',
+        u']',
+        u'c',
+        u'"',
+        u'(paren',
+        u'th',
+        u"'",
+        u'car',
+        u'"quote',
+        u"'i"
+        ]
 tagDict = {}
 sonnets = "rekt"
 """
@@ -300,6 +300,20 @@ def protoSonnetToSonnet(protoSonnet):
     for line in sonneto:
         pretty += line + '\n'
 
+
+    c = 0
+    while c < len(pretty):
+
+        if pretty[c-1:c+1] == u" '":
+            try:
+                test = pretty[c:c+4]
+                if u" " in test:
+                    pretty = pretty[:c-1]+pretty[c:]
+            except:
+                pass
+
+        c += 1
+
     return pretty
 
 
@@ -309,7 +323,7 @@ def generateSonnet():
 
 def createPickleTagDict():
     global tagDict, sonnets
-    
+
     print("Analyzing Shakespeare's works...")
     sonnets = load_sonnets("./sonnets.json")
     buildTagDict(sonnets)
@@ -336,7 +350,7 @@ if verbose: print("reading pickle dict")
 readPickleTagDict()
 #print tagDict
 #print sonnets
- 
+
 if verbose: print("Generating sonnet...\n")
 
 while True:
