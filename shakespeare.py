@@ -168,7 +168,7 @@ def chooseRhyme(word, rhyme):
     rhymes = []
     #Hacky fix for library bug. Wait, what am I saying? This whole project is hacky.
     while rhymes == []:
-        rhymes = pronouncing.rhymes(rhyme)
+        rhymes = [r for r in pronouncing.rhymes(rhyme) if r not in bannedList]
     syls = wordToSylRanks(word)
     for r in rhymes:
         if wordToSylRanks(r) == syls:
