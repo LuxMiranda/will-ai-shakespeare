@@ -4,7 +4,9 @@ Will A.I. Shakespeare is a procedural Shakespearean sonnet generator written in 
 It took first place in the Hackathon's "General" category and also scored the greatest number of points overall.
 
 We also threw in a script that does this:
+<kbd>
 ![Will-Ai-Sonnet](./Sonnet.jpg "Example Sonnet")
+</kbd>
 
 # Installation
 
