@@ -42,7 +42,8 @@ bannedList = ["a",
               u"'i",
               "'i",
               u'videotex',
-              u"'"
+              u"'",
+              u'.dot'
              ]
 tagDict = {}
 sonnets = "rekt"
