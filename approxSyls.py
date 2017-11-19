@@ -1,3 +1,6 @@
+## From http://eayd.in/?p=232
+##
+
 import re
 
 zeroSyls = [u"'d", u"'s", u"'ll"]
