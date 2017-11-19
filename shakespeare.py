@@ -344,7 +344,7 @@ def generateSonnet():
 def createPickleTagDict():
     global tagDict, sonnets
 
-    print("Analyzing Shakespeare's works...")
+    if verbose: print("Analyzing Shakespeare's works...")
     sonnets = load_sonnets("./sonnets.json")
     buildTagDict(sonnets)
     with open('pickleTagDict.pck','wb') as handle:
