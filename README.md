@@ -14,7 +14,7 @@ Requires Python 2.7 and associated pip
 
 ```
 sudo pip install nltk pronouncing
-git clone https://github.com/JackKiefer/will-ai-shakespeare
+git clone https://github.com/LuxMiranda/will-ai-shakespeare
 cd will-ai-shakespeare
 python download_reqs.py
 ```
